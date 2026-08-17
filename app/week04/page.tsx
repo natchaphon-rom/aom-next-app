@@ -2,8 +2,10 @@
 
 import Header from "../compronents/header";
 import Footer from "../compronents/footer";
+import ToDoForm from "./components/ToDoForm";
 import { dataitem, appendItem } from "../data/dataitem";
 import { useState } from "react";
+import Modal from "./components/Modal";
 
 export default function ToDoList() {
 
@@ -11,6 +13,8 @@ export default function ToDoList() {
     const [tasks, setTasks] = useState(toDoList); 
     const [numOfTask, SetNoft] = useState(tasks.length);
     const [status, setStatus] = useState(null);
+    const [open, setOpen] = useState(false);
+    const [selectedTask, setSelectedTask] = useState(null);
 
     const filteredTasks = status == null ? tasks : tasks.filter((item) => item.status === status);
 
@@ -33,6 +37,12 @@ export default function ToDoList() {
         return <span style={{ color: "red" }}>ยังไม่เสร็จ</span>
     }
 
+    const onEdit = (t) => {
+        alert(`Wamt to edit? AGEMASEN ${t}`);
+    }
+    const onDelete = (id) => {
+        alert(`Want to delete? AGEMASEN ${id}`);
+    }
     // const toDoList = [...dataitem, ...appendItem];
 
     const tmpTDL = filteredTasks.map((item, index) => {
@@ -44,20 +54,47 @@ export default function ToDoList() {
         <span>วันที่เพิ่ม: {date_added}</span><br />
         <span>ผู้เขียน: {author}</span><br />
         <span>สถานะ: {Status(status)}</span>
+
+        
+        <Modal open={open} onClose={() => setOpen(false)}>
+            {selectedTask && (
+                <div>
+                    <h3 className="text-xl font-bold text-slate-50 dark:text-white">View Task</h3>
+                    <p className="text-gray-800 dark:text-white">
+                        <span>หัวข้อ: {selectedTask.title}</span><br />
+                        <span>คำอธิบาย: {selectedTask.desc}</span><br />
+                        <span>วันที่เพิ่ม: {selectedTask.date_added}</span><br />
+                        <span>ผู้เขียน: {selectedTask.author}</span><br />
+                        <span>สถานะ: {Status(selectedTask.status)}</span>
+                    </p>
+                </div>
+            )}
+        </Modal>
+        <div className="flex gap-2 mt-2">
+            {/* View */}
+            <button onClick={(e) => {setSelectedTask(item);setOpen(true);
+            }} className="bg-green-500 text-white px-3 py-1 rounded">View</button>
+
+            {/* Edit */}
+            <button onClick={(e) =>onEdit(item)} className="bg-yellow-500 text-white px-3 py-1 rounded">Edit</button>
+
+            {/* Delete */}
+        <button onClick={(e) =>onDelete(id)} className="bg-red-500 text-white px-3 py-1 rounded">Delete</button>
+        </div>
         </div>
         );
     }
     );
 
 
-    const addTask = () => {
+    const addTask = (title, status) => {
         const newTask = {
             id: tasks.length + 1,
-            title: "ทดสอบเพิ่มงาน",
+            title: title,
             desc: "รายระเอียดของงานที่เพิ่ม",
             date_added: "13/08/2569",
             author: "Natchaphon",
-            status: true
+            status: status
         };
 
         setTasks([...tasks, newTask]);
@@ -86,11 +123,14 @@ export default function ToDoList() {
         <section className="relative bg-center flex items-center justify-center  mt-10 mb-1 repeat-" style={{ backgroundImage: `url('./images/BackgroundGray.jpg')` }}>
 
         
+
         <div>
          <div className="flex justify-center gap-3 space-y-3 flex justify-center grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
             <div className="border border-8 border-pink-400 rounded-sm p-1 m-4 mt-20 mb-1 p-8  font-bold text-slate-50 dark:text-white">
                 <div className="flex justify-center rounded-xl bg-blue-400 text-slate-50 dark:text-white p-2 m-4 mt-4 mb-4 p-4 py-5">งานที่ต้องทำ {numOfTask}x รายการ</div>
             <div>
+                <ToDoForm addTask={addTask} />
+
                 <button onClick= {addTask} className="bg-green-500 hover:bg-green-700 text-white font-bold py-4 px-4 rounded m-4">
                     เพิ่มงาน
                 </button>
