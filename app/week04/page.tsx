@@ -15,6 +15,9 @@ export default function ToDoList() {
     const [status, setStatus] = useState(null);
     const [open, setOpen] = useState(false);
     const [selectedTask, setSelectedTask] = useState(null);
+    const [editingTask, setEditingTask] = useState(null);
+
+    const resetEditingTask = () => setEditingTask(null);
 
     const filteredTasks = status == null ? tasks : tasks.filter((item) => item.status === status);
 
@@ -38,11 +41,31 @@ export default function ToDoList() {
     }
 
     const onEdit = (t) => {
-        alert(`Wamt to edit? AGEMASEN ${t}`);
+        //alert(`Want to edit? AGEMASEN ${t}`);
+        setEditingTask(t);
     }
+
+    const updateTask = (id, title, status) => {
+        setTasks(
+            tasks => tasks.map(
+                t => t.id === id ?
+                {...t, 
+                title: title,
+                status: status}
+                :t
+            )
+        );
+        setEditingTask(null);
+    }
+
     const onDelete = (id) => {
-        alert(`Want to delete? AGEMASEN ${id}`);
+       // alert(`Want to delete? AGEMASEN ${id}`);
+       const updatedTasks = tasks.filter(
+        item => item.id !== id
+       );
+       setTasks(updatedTasks);
     }
+
     // const toDoList = [...dataitem, ...appendItem];
 
     const tmpTDL = filteredTasks.map((item, index) => {
@@ -129,7 +152,12 @@ export default function ToDoList() {
             <div className="border border-8 border-pink-400 rounded-sm p-1 m-4 mt-20 mb-1 p-8  font-bold text-slate-50 dark:text-white">
                 <div className="flex justify-center rounded-xl bg-blue-400 text-slate-50 dark:text-white p-2 m-4 mt-4 mb-4 p-4 py-5">งานที่ต้องทำ {numOfTask}x รายการ</div>
             <div>
-                <ToDoForm addTask={addTask} />
+                <ToDoForm 
+                    addTask={addTask} 
+                    editingTask={editingTask}
+                    updateTask={updateTask}
+                    resetEditingTask={resetEditingTask}
+                />
 
                 <button onClick= {addTask} className="bg-green-500 hover:bg-green-700 text-white font-bold py-4 px-4 rounded m-4">
                     เพิ่มงาน
