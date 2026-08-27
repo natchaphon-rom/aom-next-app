@@ -34,12 +34,7 @@ export default function ToDoList() {
             return <span style={{ color: "green" }}>กำลังศึกษาอยู่</span>
         return <span style={{ color: "red" }}>ไม่ได้เป็นนักศึกษา</span>
     }
-    const Status = (status: boolean) => {
-        if (status)
-            return <span style={{ color: "green" }}>เสร็จสิ้น</span>
-        return <span style={{ color: "red" }}>ยังไม่เสร็จ</span>
-    }
-
+    
     const onEdit = (t) => {
         //alert(`Want to edit? AGEMASEN ${t}`);
         setEditingTask(t);
