@@ -29,6 +29,12 @@ export default function ToDoList() {
     let classSec = "ทส.ท./ทส.ต."
     let active = true;
 
+    const Status = (status: boolean) => {
+        if (status)
+            return <span style={{ color: "green" }}>เสร็จสิ้น</span>
+        return <span style={{ color: "red" }}>ยังไม่เสร็จ</span>
+    } 
+
     const isActive = (act: boolean) => {
         if (act)
             return <span style={{ color: "green" }}>กำลังศึกษาอยู่</span>
